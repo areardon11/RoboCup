@@ -1,0 +1,20 @@
+README
+
+Explanation of our code:
+
+Important Files:
+
+In lab6/src/lab6/src:
+	robocup.py - our main project file (to run: Use: robocup.py [ zumy name with ball] [zumy receiving initially]\
+													 [ AR tag number for Zumy with ball] [ AR tag number for receiving Zumy] \
+			 										 [ AR tag of obstacle ])
+	object_tracker_red.py
+	object_tracker_gbo.py - these two files send pixel coordinates of the 4 colors red, green, blue and orange to robocup.py via a topic
+
+	Helper Python Files: ar_tag_subs.py, kin_func_skeleton.py, exp_quat_func.py
+
+In lab6/src/lab6/launch:
+	run_all.launch - launch this before anything else (NOTE: press enter in the terminal and click on the image taken 4 times before running robocup.py)
+
+In coop_slam_workspace/src/ros_zumy/src:
+	zumy.py and zumy_ros_brige.py are the modified files. We added code to turn be able to on and off the electromagnet

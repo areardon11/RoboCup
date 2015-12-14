@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+import tf
+import rospy
+import sys
+import math
+import numpy as np
+from tf2_msgs.msg import TFMessage
+from geometry_msgs.msg import Transform, Vector3
+import kin_func_skeleton as kfs
+import exp_quat_func as eqf
+
+#would have been easier to make g_dict a global variable instead of creating a class to make it a class variable
+class StoreTags(object):
+    g_dict = {}
+
+    def __init__(self):
+        rospy.Subscriber('/tf', TFMessage, self.callback, ar_tags)
+
+    def callback(self, msg, ar_tags):
+        #g = []
+        for i in range(0, len(msg.transforms)):
+
+            # YOUR CODE HERE
+            # The code should look at the transforms for each AR tag
+            # Then compute the rigid body transform between AR0 and AR1, 
+            # AR0 and ARZ, AR1 and ARZ
+            #  hint: use the functions you wrote in exp_quat_func
+
+	    rotation = np.array([msg.transforms[i].transform.rotation.x, msg.transforms[i].transform.rotation.y, msg.transforms[i].transform.rotation.z, msg.transforms[i].transform.rotation.w])
+	    translation = np.array([msg.transforms[i].transform.translation.x, msg.transforms[i].transform.translation.y, msg.transforms[i].transform.translation.z])
+	
+	    exp = eqf.quaternion_to_exp(rotation)
+	    #g.append(eqf.create_rbt(exp[0], exp[-1], translation))
+            StoreTags.g_dict[msg.transforms[i].child_frame_id] = eqf.create_rbt(exp[0], exp[-1], translation)
+
+	if len(StoreTags.g_dict) >= 3:
+	    g_01 = eqf.compute_gab(StoreTags.g_dict[ar_tags['ar0']], StoreTags.g_dict[ar_tags['ar1']])
+	    print("g_01 (gab from " + ar_tags['ar0'] + " to " + ar_tags['ar1'])
+	    print(g_01)
+	    g_0Z = eqf.compute_gab(StoreTags.g_dict[ar_tags['ar0']], StoreTags.g_dict[ar_tags['arZ']])
+	    print("g_0Z (gab from " + ar_tags['ar0'] + " to " + ar_tags['arZ'])
+	    print(g_0Z)
+	    g_1Z = eqf.compute_gab(StoreTags.g_dict[ar_tags['ar1']], StoreTags.g_dict[ar_tags['arZ']])
+	    print("g_1Z (gab from " + ar_tags['ar1'] + " to " + ar_tags['arZ'])
+	    print(g_1Z)
+  
+if __name__=='__main__':
+    rospy.init_node('ar_tags_subs_manual')
+    if len(sys.argv) < 4:
+        print('Use: ar_tags_subs_manual.py [ AR tag number ] [ AR tag number ] [ AR tag number ] ')
+        sys.exit()
+    ar_tags = {}
+    ar_tags['ar0'] = 'ar_marker_' + sys.argv[1]
+    ar_tags['ar1'] = 'ar_marker_' + sys.argv[2]
+    ar_tags['arZ'] = 'ar_marker_' + sys.argv[3]
+
+    tags = StoreTags()
+    rospy.spin()
+
+

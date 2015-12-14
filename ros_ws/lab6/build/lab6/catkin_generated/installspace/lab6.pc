@@ -1,0 +1,8 @@
+prefix=/home/cc/ee106a/fa15/class/ee106a-bd/ros_workspaces/lab6/install
+
+Name: lab6
+Description: Description of lab6
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/cc/ee106a/fa15/class/ee106a-bd/ros_workspaces/lab6/install/lib 
+Requires: 

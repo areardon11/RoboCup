@@ -1,0 +1,2 @@
+ar_track_alvar2:lab6:man_joy_override:odroid_machine:zumy_teleop
+-DCATKIN_DEVEL_PREFIX=/home/cc/ee106a/fa15/class/ee106a-bd/ros_workspaces/lab6/devel -DCMAKE_INSTALL_PREFIX=/home/cc/ee106a/fa15/class/ee106a-bd/ros_workspaces/lab6/install -G Unix Makefiles
